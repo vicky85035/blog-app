@@ -21,27 +21,8 @@ class PostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         user = get_object_or_404(User, id=self.kwargs['pk'])
-        return Post.objects.filter(user__id=user.id)
+        return Post.objects.filter(created_by__id=user.id)
 
-class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-
-    # def get_queryset(self):
-    #     breakpoint()
-    #     tag = get_object_or_404(Tag, slug='tag_slug')
-    #     return Post.objects.filter(tags__name=tag.name)
-
-    def get_queryset(self):
-        queryset = self.queryset
-        tag_names = self.request.query_params.get('tags')
-        if tag_names:
-            tags = [tag.strip() for tag in tag_names.split(',')]
-            # Filter posts that have ALL specified tags
-            # For "OR" logic (any of the tags): posts = queryset.filter(tags__name__in=tags).distinct()
-            for tag in tags:
-                queryset = queryset.filter(tags__name=tag)
-        return queryset.distinct()
 
 
 

@@ -20,8 +20,7 @@ class PostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        user = get_object_or_404(User, id=self.kwargs['pk'])
-        return Post.objects.filter(created_by__id=user.id)
+        return Post.objects.filter(id=self.kwargs['pk'])
 
 
 

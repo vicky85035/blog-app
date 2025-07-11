@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from blog.models import Post
 from django.shortcuts import get_object_or_404
+from blog.serializer import PostSerializer
 # from django.contrib.auth.models import User # Or your custom user model
 
 class LoginAPIView(generics.GenericAPIView):
@@ -125,9 +126,9 @@ class UserListCreate(generics.ListCreateAPIView):
     search_fields = ['first_name','last_name', 'id']
     ordering_fields = ['first_name','no_of_posts','date_joined']
 
-class UserListAPIView(generics.ListAPIView):
+class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        user = get_object_or_404(UserProfile, id=self.kwargs['user_id']) 
-        return UserProfile.objects.filter(id=user.id)     
+        user = get_object_or_404(UserProfile, id=self.kwargs['pk']) 
+        return UserProfile.objects.filter(id=user.id)

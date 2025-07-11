@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from rest_framework import generics, filters
+from rest_framework import generics, filters, viewsets
 from blog.models import Post
 from accounts.models import UserProfile
 from blog.serializer import PostSerializer
 from blog.pagination import SetPagination
 from django.shortcuts import get_object_or_404
+from taggit.models import Tag
 
 # Create your views here.
 class PostListCreate(generics.ListCreateAPIView):
@@ -15,10 +16,33 @@ class PostListCreate(generics.ListCreateAPIView):
     ordering_fields = ['user__first_name', 'created_at']
     pagination_class = SetPagination
     
-class PostListAPIView(generics.ListAPIView):
+class PostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        user = get_object_or_404(UserProfile, id=self.kwargs['user_id'])
+        user = get_object_or_404(UserProfile, id=self.kwargs['pk'])
         return Post.objects.filter(user__id=user.id).order_by('-created_at')
+    
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    # def get_queryset(self):
+    #     breakpoint()
+    #     tag = get_object_or_404(Tag, slug='tag_slug')
+    #     return Post.objects.filter(tags__name=tag.name)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        tag_names = self.request.query_params.get('tags')
+        if tag_names:
+            tags = [tag.strip() for tag in tag_names.split(',')]
+            # Filter posts that have ALL specified tags
+            # For "OR" logic (any of the tags): posts = queryset.filter(tags__name__in=tags).distinct()
+            for tag in tags:
+                queryset = queryset.filter(tags__name=tag)
+        return queryset.distinct()
+    
+
+    
     

@@ -1,7 +1,8 @@
 from django.urls import path
-from blog.views import PostListCreate, PostListAPIView
+from blog.views import PostListCreate, PostRetrieveUpdateDestroy, PostViewSet
 
 urlpatterns = [
     path('post/', PostListCreate.as_view(), name='post-list-create'),
-    path('<int:user_id>/post/',PostListAPIView.as_view(), name='post-list-api-view'),
-]
+    path('<slug:tag_slug>/post/',PostViewSet.as_view({'get': 'list'}), name='post-view-set'),
+    path('<int:pk>/post/',PostRetrieveUpdateDestroy.as_view(), name='post-retrieve-update-destroy'),
+] 

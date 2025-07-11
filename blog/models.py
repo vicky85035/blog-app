@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from accounts.models import UserProfile
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class Post(models.Model):
@@ -11,6 +11,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     post_img = models.ImageField(upload_to='post_img/', null=True, blank=True)
     description = models.TextField()
+    tags = TaggableManager()
 
     class Meta:
         unique_together = ('title','thought','description')

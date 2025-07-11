@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from accounts.models import UserProfile
 from blog.models import Post
-from rest_framework.response import Response
-from blog.serializer import PostSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     no_of_posts = serializers.SerializerMethodField()

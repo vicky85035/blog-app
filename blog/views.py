@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, filters, viewsets
 from blog.models import Post
-from accounts.models import UserProfile
+from accounts.models import User
 from blog.serializer import PostSerializer
 from blog.pagination import SetPagination
 from django.shortcuts import get_object_or_404
@@ -20,7 +20,7 @@ class PostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        user = get_object_or_404(UserProfile, id=self.kwargs['pk'])
+        user = get_object_or_404(User, id=self.kwargs['pk'])
         return Post.objects.filter(user__id=user.id)
 
 class PostViewSet(viewsets.ModelViewSet):

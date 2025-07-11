@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import UserProfile
+from accounts.models import User
 from blog.models import Post
 
 class UserSerializer(serializers.ModelSerializer):
@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     list_of_posts = serializers.SerializerMethodField()
 
     class Meta:
-        model = UserProfile
+        model = User
         fields = [
             'id',
             'name',
@@ -20,14 +20,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_no_of_posts(self, obj):
         return Post.objects.filter(user__id=obj.id).count()
-    
+
     def get_list_of_posts(self, obj):
         result = Post.objects.filter(user__id=obj.id).all()
         data = []
         for post in result:
-            if not post.post_img: 
+            if not post.post_img:
                 post_image = "No Images"
-            
+
             data.append({
                 "id": post.id,
                 "category": post.story_by,

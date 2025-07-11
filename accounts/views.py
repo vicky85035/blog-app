@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status, serializers, filters
 from accounts.serializers import UserSerializer
-from accounts.models import UserProfile
+from accounts.models import User
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.validators import UniqueValidator
@@ -58,14 +58,14 @@ class LoginAPIView(generics.GenericAPIView):
                 {"detail": "Invalid credentials."},
                 status=status.HTTP_401_UNAUTHORIZED
             )
-        
+
 
 class SignupAPIView(generics.CreateAPIView):
     """
     API View for user registration (signup).
     Handles creating a new user account by explicitly calling set_password().
     """
-    queryset = UserProfile.objects.all()
+    queryset = User.objects.all()
     # We will still use a serializer for validation, but its 'create' method
     # should be adjusted or removed if it's no longer responsible for hashing.
     # For this example, we'll assume a basic serializer or validate directly.
@@ -77,11 +77,11 @@ class SignupAPIView(generics.CreateAPIView):
     class MinimalUserSignupSerializer(serializers.Serializer):
         username = serializers.CharField(
             required=True,
-            validators=[UniqueValidator(queryset=UserProfile.objects.all(), message="A user with that username already exists.")]
+            validators=[UniqueValidator(queryset=User.objects.all(), message="A user with that username already exists.")]
         )
         email = serializers.EmailField(
             required=True,
-            validators=[UniqueValidator(queryset=UserProfile.objects.all(), message="A user with that email already exists.")]
+            validators=[UniqueValidator(queryset=User.objects.all(), message="A user with that email already exists.")]
         )
         password = serializers.CharField(write_only=True, required=True,)
 
@@ -104,7 +104,7 @@ class SignupAPIView(generics.CreateAPIView):
 
         try:
             # Create the user instance
-            user = UserProfile(username=username, email=email)
+            user = User(username=username, email=email)
             # Set the password using set_password() to ensure it's hashed correctly
             user.set_password(password)
             user.save()
@@ -120,7 +120,7 @@ class SignupAPIView(generics.CreateAPIView):
             )
 
 class UserListCreate(generics.ListCreateAPIView):
-    queryset = UserProfile.objects.all()
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
     search_fields = ['first_name','last_name', 'id']
@@ -130,5 +130,5 @@ class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        user = get_object_or_404(UserProfile, id=self.kwargs['pk']) 
-        return UserProfile.objects.filter(id=user.id)
+        user = get_object_or_404(User, id=self.kwargs['pk'])
+        return User.objects.filter(id=user.id)

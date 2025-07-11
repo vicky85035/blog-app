@@ -19,20 +19,17 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def get_no_of_posts(self, obj):
-        return Post.objects.filter(user__id=obj.id).count()
+        return Post.objects.filter(created_by__id=obj.id).count()
 
     def get_list_of_posts(self, obj):
-        result = Post.objects.filter(user__id=obj.id).all()
+        result = Post.objects.filter(created_by__id=obj.id).all()
         data = []
         for post in result:
-            if not post.post_img:
-                post_image = "No Images"
 
             data.append({
                 "id": post.id,
-                "category": post.story_by,
                 'title': post.title,
-                'images':post_image,
+                'images':post.cover_image,
                 "created_at": post.created_at,
             })
         # data = PostSerializer(result, many=True).data

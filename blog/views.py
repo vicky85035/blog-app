@@ -5,7 +5,7 @@ from accounts.models import UserProfile
 from blog.serializer import PostSerializer
 from blog.pagination import SetPagination
 from django.shortcuts import get_object_or_404
-from taggit.models import Tag
+# from taggit.models import Tag
 
 # Create your views here.
 class PostListCreate(generics.ListCreateAPIView):
@@ -15,14 +15,14 @@ class PostListCreate(generics.ListCreateAPIView):
     search_fields = ['user__first_name', 'user__last_name']
     ordering_fields = ['user__first_name', 'created_at']
     pagination_class = SetPagination
-    
+
 class PostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
         user = get_object_or_404(UserProfile, id=self.kwargs['pk'])
-        return Post.objects.filter(user__id=user.id).order_by('-created_at')
-    
+        return Post.objects.filter(user__id=user.id)
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -42,7 +42,6 @@ class PostViewSet(viewsets.ModelViewSet):
             for tag in tags:
                 queryset = queryset.filter(tags__name=tag)
         return queryset.distinct()
-    
 
-    
-    
+
+

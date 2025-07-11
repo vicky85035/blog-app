@@ -10,10 +10,10 @@ class Post(models.Model):
     thought = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now=True)
     post_img = models.ImageField(upload_to='post_img/', null=True, blank=True)
-    full_thought = models.TextField()
+    description = models.TextField()
 
     class Meta:
-        unique_together = ('title','thought','full_thought')
+        unique_together = ('title','thought','description')
 
     def __str__(self):
-        return f'{self.title}'
+        return f'{self.title}, written by {self.user}'

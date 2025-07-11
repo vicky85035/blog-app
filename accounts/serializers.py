@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = [
+            'id',
             'name',
             'username',
             'date_joined',
@@ -26,11 +27,15 @@ class UserSerializer(serializers.ModelSerializer):
         result = Post.objects.filter(user__id=obj.id).all()
         data = []
         for post in result:
+            if not post.post_img: 
+                post_image = "No Images"
+            
             data.append({
                 "id": post.id,
                 "category": post.story_by,
                 'title': post.title,
-                "created_at": post.created_at
+                'images':post_image,
+                "created_at": post.created_at,
             })
         # data = PostSerializer(result, many=True).data
         return data

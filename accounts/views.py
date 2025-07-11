@@ -9,6 +9,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from blog.models import Post
+from django.shortcuts import get_object_or_404
 # from django.contrib.auth.models import User # Or your custom user model
 
 class LoginAPIView(generics.GenericAPIView):
@@ -117,9 +118,16 @@ class SignupAPIView(generics.CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-class UserListCreate(generics.ListAPIView):
+class UserListCreate(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserSerializer
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
     search_fields = ['first_name','last_name', 'id']
     ordering_fields = ['first_name','no_of_posts','date_joined']
+
+class UserListAPIView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        user = get_object_or_404(UserProfile, id=self.kwargs['user_id']) 
+        return UserProfile.objects.filter(id=user.id)     

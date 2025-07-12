@@ -17,13 +17,12 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'created_at']
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = PostUserSerializer(read_only=True)
+    author = PostUserSerializer(source="user", read_only=True)
 
     class Meta:
         model = PostComment
         fields = ['id', 'author', 'created_at', 'text']
 
-    
 
 class PostSerializer(serializers.ModelSerializer):
     # created_by = serializers.SerializerMethodField()

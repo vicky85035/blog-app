@@ -21,3 +21,4 @@ class PostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Post.objects.filter(id=self.kwargs['pk'])
+    

@@ -9,13 +9,12 @@ class PostUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "name", "email", "avatar"]
 
-class likeSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.name')
-    post = serializers.ReadOnlyField(source='post.title')
+class LikeSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.id')
 
     class Meta:
         model = Postlike
-        fields = '__all__'
+        fields = ['id', 'user', 'created_at']
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.name')
@@ -28,7 +27,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     # created_by = serializers.SerializerMethodField()
     created_by = PostUserSerializer(read_only=True)
-    likes = serializers.IntegerField(source='total_likes')
+    likes = LikeSerializer(source='post_likes', many=True, read_only=True)
     comments = serializers.IntegerField(source='total_comments')
 
     class Meta:
@@ -49,5 +48,6 @@ class PostSerializer(serializers.ModelSerializer):
     #     # result = {"name": user.name, "email": user.email}
     #     result = PostUserSerializer(user).data
     #     return result
+
 
 

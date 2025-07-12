@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, filters, viewsets
+from rest_framework import generics, filters
 from blog.models import Post
 from accounts.models import User
 from blog.serializer import PostSerializer
@@ -21,7 +21,3 @@ class PostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Post.objects.filter(id=self.kwargs['pk'])
-
-
-
-

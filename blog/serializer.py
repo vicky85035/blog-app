@@ -23,6 +23,8 @@ class CommentSerializer(serializers.ModelSerializer):
         model = PostComment
         fields = ['id', 'author', 'created_at', 'text']
 
+    
+
 class PostSerializer(serializers.ModelSerializer):
     # created_by = serializers.SerializerMethodField()
     created_by = PostUserSerializer(read_only=True)

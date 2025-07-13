@@ -40,6 +40,7 @@ class LoginAPIView(generics.GenericAPIView):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+            data = {}
             # If authentication is successful, generate tokens using the serializer
             serializer = self.get_serializer(data=request.data)
             try:
@@ -50,9 +51,9 @@ class LoginAPIView(generics.GenericAPIView):
                     {"detail": "Invalid credentials.", "errors": serializer.errors},
                     status=status.HTTP_401_UNAUTHORIZED
                 )
-
             # Return the access and refresh tokens
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+            return Response({"user": {"username": username},
+                             'token':serializer.validated_data}, status=status.HTTP_200_OK)
         else:
             # If authentication fails
             return Response(

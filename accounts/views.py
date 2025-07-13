@@ -109,21 +109,31 @@ class SignupAPIView(generics.CreateAPIView):
 
 
         # Extract validated data
-        name = serializer.validated_data['name']
-        # breakpoint()
+        name = serializer.validated_data['name'].strip()
+        name_parts = name.split()
+        if len(name_parts) == 0:
+            first_name = ""
+            last_name = ""
+        elif len(name_parts) == 1:
+            first_name = name_parts[0]
+            last_name = ""
+        else:
+            first_name = name_parts[0]
+            last_name = " ".join(name_parts[1:])
         username = serializer.validated_data['username']
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
 
         try:
-            # Create the user instance 
-            for i in name:
-                breakpoint()
-                if i == ' ':
-                    full_name = name.split( )
-                    user = User(username=username, email=email, first_name=full_name[0], last_name=full_name[1])
-                else:
-                    user = User(username=username, email=email, first_name=name)
+            # Create the user instance
+            user_dict = {
+                "username": username,
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name
+            }
+            user = User(**user_dict)
+
             # Set the password using set_password() to ensure it's hashed correctly
             user.set_password(password)
             user.save()

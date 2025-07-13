@@ -37,7 +37,6 @@ class UserSerializer(serializers.ModelSerializer):
     #     # data = PostSerializer(result, many=True).data
     #     return data
 
-
 class BasicUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

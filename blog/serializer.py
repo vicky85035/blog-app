@@ -10,11 +10,12 @@ class PostUserSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "email", "avatar"]
 
 class LikeSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.id')
+    user_id = serializers.ReadOnlyField(source='user.id')
+    name = serializers.CharField(source='user.name')
 
     class Meta:
         model = Postlike
-        fields = ['id', 'user', 'created_at']
+        fields = ['id', 'user_id', 'name','created_at']
 
 class CommentSerializer(serializers.ModelSerializer):
     author = PostUserSerializer(source="user", read_only=True)

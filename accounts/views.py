@@ -83,6 +83,7 @@ class SignupAPIView(generics.CreateAPIView):
     # For demonstration, let's define a minimal serializer directly within views.py
     # or assume UserRegisterSerializer has its create method adjusted not to hash.
     class MinimalUserSignupSerializer(serializers.Serializer):
+        name =serializers.CharField(write_only=True, required=True)
         username = serializers.CharField(
             required=True,
             validators=[UniqueValidator(queryset=User.objects.all(), message="A user with that username already exists.")]
@@ -106,13 +107,15 @@ class SignupAPIView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         # Extract validated data
+        name = serializer.validated_data['name']
+        full_name = name.split( )
         username = serializer.validated_data['username']
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-
+        
         try:
             # Create the user instance
-            user = User(username=username, email=email)
+            user = User(username=username, email=email,first_name = full_name[0], last_name = full_name[1])
             # Set the password using set_password() to ensure it's hashed correctly
             user.set_password(password)
             user.save()

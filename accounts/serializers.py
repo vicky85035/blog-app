@@ -1,10 +1,16 @@
 from rest_framework import serializers
 from accounts.models import User
 from blog.models import Post
+from blog.serializer import PostSerializer
+
+class UserPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id','title','cover_image','description']
 
 class UserSerializer(serializers.ModelSerializer):
-    no_of_posts = serializers.SerializerMethodField()
-    list_of_posts = serializers.SerializerMethodField()
+    # post_list = serializers.SerializerMethodField()
+    post_list = UserPostSerializer(source='post_set', many=True, read_only=True)
 
     class Meta:
         model = User
@@ -14,23 +20,19 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'date_joined',
             'email',
-            'no_of_posts',
-            'list_of_posts',
+            'post_list',
         ]
 
-    def get_no_of_posts(self, obj):
-        return Post.objects.filter(created_by__id=obj.id).count()
+    # def get_post_list(self, obj):
+    #     result = Post.objects.filter(created_by__id=obj.id).all()
+    #     data = []
+    #     for post in result:
 
-    def get_list_of_posts(self, obj):
-        result = Post.objects.filter(created_by__id=obj.id).all()
-        data = []
-        for post in result:
-
-            data.append({
-                "id": post.id,
-                'title': post.title,
-                'images':post.cover_image,
-                "created_at": post.created_at,
-            })
-        # data = PostSerializer(result, many=True).data
-        return data
+    #         data.append({
+    #             "id": post.id,
+    #             'title': post.title,
+    #             'images':post.cover_image,
+    #             "created_at": post.created_at,
+    #         })
+    #     # data = PostSerializer(result, many=True).data
+    #     return data

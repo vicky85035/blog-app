@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from rest_framework import generics, status, serializers, filters
-from accounts.serializers import UserSerializer
+from rest_framework import generics, status, serializers, filters, permissions
+from accounts.serializers import UserSerializer, UserPostSerializer
 from accounts.models import User
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from blog.models import Post
 from django.shortcuts import get_object_or_404
 from blog.serializer import PostSerializer
+from accounts.permissions import IsAuthorOrReadOnly
 # from django.contrib.auth.models import User # Or your custom user model
 
 class LoginAPIView(generics.GenericAPIView):
@@ -128,6 +129,7 @@ class UserListCreate(generics.ListCreateAPIView):
 
 class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
 
     def get_queryset(self):
         user = get_object_or_404(User, id=self.kwargs['pk'])

@@ -48,6 +48,3 @@ class PostSerializer(serializers.ModelSerializer):
     #     # result = {"name": user.name, "email": user.email}
     #     result = PostUserSerializer(user).data
     #     return result
-
-
-

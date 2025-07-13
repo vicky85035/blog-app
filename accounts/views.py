@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status, serializers, filters, permissions
-from accounts.serializers import UserSerializer, UserPostSerializer
+from accounts.serializers import UserSerializer, BasicUserSerializer
 from accounts.models import User
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -52,8 +52,14 @@ class LoginAPIView(generics.GenericAPIView):
                     status=status.HTTP_401_UNAUTHORIZED
                 )
             # Return the access and refresh tokens
-            return Response({"user": {"username": username},
-                             'token':serializer.validated_data}, status=status.HTTP_200_OK)
+
+            data = {
+                "user": BasicUserSerializer(user).data,
+                'token':serializer.validated_data
+            }
+
+            return Response(data, status=status.HTTP_200_OK)
+            # return Response(serializer.validated_data, status=status.HTTP_200_OK)
         else:
             # If authentication fails
             return Response(

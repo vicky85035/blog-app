@@ -15,10 +15,10 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title}, written by {self.created_by}'
-    
+
     @property
     def total_likes(self):
-        return self.post_likes.count()    
+        return self.post_likes.count()
 
     @property
     def total_comments(self):
@@ -43,10 +43,10 @@ class Postlike(models.Model):
 
     class Meta:
         unique_together = ('user', 'post')
-    
+
     def __str__(self):
         return f'{self.user.name} likes {self.post.title}'
-    
+
 class PostComment(models.Model):
     user = models.ForeignKey(User, related_name="user_comments", on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name="post_comments", on_delete=models.CASCADE)
@@ -55,4 +55,3 @@ class PostComment(models.Model):
 
     def __str__(self):
         return f'{self.user.name} comment on {self.post.title}'
-    

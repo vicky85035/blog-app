@@ -49,3 +49,15 @@ class PostSerializer(serializers.ModelSerializer):
     #     # result = {"name": user.name, "email": user.email}
     #     result = PostUserSerializer(user).data
     #     return result
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    user = PostUserSerializer(read_only=True)
+    class Meta:
+        model = Postlike
+        fields = "__all__"
+        
+class PostCommentSerializer(serializers.ModelSerializer):
+    user = PostUserSerializer(read_only=True)
+    class Meta:
+        model = PostComment
+        fields = "__all__"

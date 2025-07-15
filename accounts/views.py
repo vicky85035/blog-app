@@ -129,6 +129,16 @@ class SignupAPIView(generics.CreateAPIView):
         email = serializer.validated_data["email"]
         password = serializer.validated_data["password"]
 
+        name_parts = name.split()
+        if len(name_parts) == 0:
+            first_name = ""
+            last_name = ""
+        elif len(name_parts) == 1:
+            first_name = name_parts[0]
+            last_name = ""
+        else:
+            first_name = name_parts[0]
+            last_name = " ".join(name_parts[1:])
         try:
             # Create the user instance
             user = User(

@@ -24,7 +24,7 @@ urlpatterns = [
         LikeRetrieveUpdateDestroy.as_view(),
         name="like-retrieve-update-destroy",
     ),
-    path("posts/comment/", CommentCreate.as_view(), name="like-create"),
+    path("posts/<int:post_id>/comments/add/", CommentCreate.as_view(), name="comment-create"),
     path(
         "posts/comment/<int:pk>/",
         CommentRetrieveUpdateDestroy.as_view(),

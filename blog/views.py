@@ -74,7 +74,6 @@ class LikeCreate(generics.CreateAPIView):
             status=201
         )
 
-
 class LikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LikeSerializer
 
@@ -92,11 +91,32 @@ class CommentCreate(generics.CreateAPIView):
     queryset = PostComment.objects.all()
     serializer_class = PostCommentSerializer
     permission_classes = [IsAuthenticated]
+    
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs.get("post_id")
+        
+        if PostComment.objects.filter(user=request.user, post_id=post_id).exists():
+            return Response(
+                {"detail": "You have already commented on  this post."},
+                status=400
+            )
+        
+        serializer = self.get_serializer(data={"post": post_id})
+        serializer.is_valid(raise_exception=True)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        try:
+            comment_instance = serializer.save(user=request.user)
+        except Exception as e:
+            return Response(
+                {"detail": f"An error occurred while saving the like: {e}"},
+                status=500
+            )
 
-
+        return Response(
+            {"message": "Post comment is  successfully done!", "id": comment_instance.id},
+            status=201
+        )
+        
 class CommentRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostCommentSerializer
 

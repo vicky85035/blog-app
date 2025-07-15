@@ -7,6 +7,7 @@ from accounts.models import User
 from blog.serializer import PostSerializer, LikeSerializer, PostLikeSerializer, PostCommentSerializer
 from blog.pagination import SetPagination
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
 
 # from taggit.models import Tag
 
@@ -48,8 +49,30 @@ class LikeCreate(generics.CreateAPIView):
     serializer_class = PostLikeSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs.get("post_id")
+
+        if Postlike.objects.filter(user=request.user, post_id=post_id).exists():
+            return Response(
+                {"detail": "You have already liked this post."},
+                status=400
+            )
+
+        serializer = self.get_serializer(data={"post": post_id})
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            like_instance = serializer.save(user=request.user)
+        except Exception as e:
+            return Response(
+                {"detail": f"An error occurred while saving the like: {e}"},
+                status=500
+            )
+
+        return Response(
+            {"message": "Post liked successfully!", "id": like_instance.id},
+            status=201
+        )
 
 
 class LikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):

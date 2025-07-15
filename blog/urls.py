@@ -18,8 +18,7 @@ urlpatterns = [
         PostRetrieveUpdateDestroy.as_view(),
         name="post-retrieve-update-destroy",
     ),
-    
-    path("posts/like/", LikeCreate.as_view(), name="like-create"),
+    path("posts/<int:post_id>/like/", LikeCreate.as_view(), name="like-create"),
     path(
         "posts/like/<int:pk>/",
         LikeRetrieveUpdateDestroy.as_view(),

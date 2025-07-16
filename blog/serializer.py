@@ -55,9 +55,8 @@ class PostLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Postlike
         fields = "__all__"
-        
+
 class PostCommentSerializer(serializers.ModelSerializer):
-    user = PostUserSerializer(read_only=True)
     class Meta:
         model = PostComment
         fields = "__all__"

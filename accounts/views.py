@@ -12,7 +12,7 @@ from blog.models import Post
 from django.shortcuts import get_object_or_404
 from blog.serializer import PostSerializer
 from accounts.permissions import IsAuthorOrReadOnly
-
+from rest_framework.request import Request
 # from django.contrib.auth.models import User # Or your custom user model
 
 
@@ -187,8 +187,16 @@ class TestAPI(generics.ListCreateAPIView):
     queryset = User.objects.all()
 
     def get(self, request, *args, **kwargs):
-        breakpoint()
+        # to get query parameters data ?roll=485&school=dps
+        # use request.query_params["roll"] or request.query_params.get("roll")
+        # self.request.query_params
+
+        # to get url path value testapi/<str:name>/
+        # kwargs.get("name") or kwargs["name"]
+        # self.kwargs["name"]
         return Response([{"name": "ravi"}, {"name": "vicky"}])
-    
+
     def post(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        # to fetch API BODY DATA
+        # use request.data
+        return Response([{"name": "ravi"}, {"name": "vicky"}])

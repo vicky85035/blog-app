@@ -181,3 +181,14 @@ class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         user = get_object_or_404(User, id=self.kwargs["pk"])
         return User.objects.filter(id=user.id)
+
+
+class TestAPI(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        breakpoint()
+        return Response([{"name": "ravi"}, {"name": "vicky"}])
+    
+    def post(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

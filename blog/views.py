@@ -95,11 +95,11 @@ class CommentCreate(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         post_id = kwargs.get("post_id")
         
-        if PostComment.objects.filter(user=request.user, post_id=post_id).exists():
-            return Response(
-                {"detail": "You have already commented on  this post."},
-                status=400
-            )
+        # if PostComment.objects.filter(user=request.user, post_id=post_id).exists():
+        #     return Response(
+        #         {"detail": "You have already commented on  this post."},
+        #         status=400
+        #     )
         
         serializer = self.get_serializer(data={"post": post_id})
         serializer.is_valid(raise_exception=True)

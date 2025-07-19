@@ -4,21 +4,26 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from blog.models import Post, Postlike, PostComment
 from accounts.models import User
-from blog.serializer import PostSerializer, LikeSerializer, PostLikeSerializer, PostCommentSerializer
+from blog.serializer import PostSerializer, LikeSerializer, CommentSerializer,PostLikeSerializer, PostCommentSerializer
 from blog.pagination import SetPagination
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
 # from taggit.models import Tag
 
+class UserPostList(generics.ListAPIView):
+    serializer_class = PostSerializer
 
-# Create your views here.
+    def get_queryset(self):
+        user = get_object_or_404(User, id=self.kwargs["user_id"])
+        return Post.objects.filter(created_by__id=user.id)
+    
 class PostList(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["user__first_name", "user__last_name"]
-    ordering_fields = ["user__first_name", "created_at"]
+    search_fields = ["title", "description"]
+    ordering_fields = ["created_by__first_name", "created_at"]
     pagination_class = SetPagination
 
 
@@ -74,16 +79,17 @@ class LikeCreate(generics.CreateAPIView):
             status=201
         )
 
-class LikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class postLikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Postlike.objects.filter(id=self.kwargs["pk"])
 
 
 class CommentList(generics.ListAPIView):
-    queryset = Postlike.objects.all()
-    serializer_class = LikeSerializer
+    queryset = PostComment.objects.all()
+    serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
 
 
@@ -122,6 +128,7 @@ class CommentCreate(generics.CreateAPIView):
 
 class CommentRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostCommentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return PostComment.objects.filter(id=self.kwargs["pk"])

@@ -170,13 +170,13 @@ class UserListCreate(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["first_name", "last_name", "id"]
-    ordering_fields = ["first_name", "no_of_posts", "date_joined"]
+    search_fields = ["username", "id"]
+    ordering_fields = ["username", "date_joined"]
 
 
 class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = get_object_or_404(User, id=self.kwargs["pk"])

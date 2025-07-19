@@ -203,10 +203,9 @@ class TestAPI(generics.ListCreateAPIView):
         return Response([{"name": "ravi"}, {"name": "vicky"}])
 
 
-class UserPostList(generics.ListAPIView):
-    serializer_class = UserPostListSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def get_queryset(self):
-        return Post.objects.filter(created_by = self.request.user)
-    
+# class UserPostList(generics.ListAPIView):
+#     serializer_class = UserPostListSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get_queryset(self):
+#         return Post.objects.filter(created_by = self.request.user)

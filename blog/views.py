@@ -10,13 +10,13 @@ from rest_framework.response import Response
 
 # from taggit.models import Tag
 
-class UserPostList(generics.ListAPIView):
-    serializer_class = PostSerializer
+# class UserPostList(generics.ListAPIView):
+#     serializer_class = PostSerializer
 
-    def get_queryset(self):
-        user = get_object_or_404(User, id=self.kwargs["user_id"])
-        return Post.objects.filter(created_by__id=user.id)
-    
+#     def get_queryset(self):
+#         user = get_object_or_404(User, id=self.kwargs["user_id"])
+#         return Post.objects.filter(created_by__id=user.id)
+
 class PostList(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -24,6 +24,27 @@ class PostList(generics.ListAPIView):
     search_fields = ["title", "description"]
     ordering_fields = ["created_by__first_name", "created_at"]
     pagination_class = SetPagination
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get("user_id")
+        queryset = Post.objects.all()
+        if user_id:
+            queryset = queryset.filter(created_by_id=user_id)
+        return queryset
+
+from rest_framework.views import APIView
+class PostListApiView(APIView):
+    def get(self, request, *args, **kwargs):
+        user_id = request.query_params.get("user_id")
+        posts = Post.objects.all()
+
+        if user_id:
+            result = posts.filter(created_by_id = user_id)
+            serializer_obj = PostSerializer(result, many=True)
+            post_data = serializer_obj.data
+        else:
+            post_data = PostSerializer(posts, many=True).data
+        return Response(post_data)
 
 
 class PostCreate(generics.CreateAPIView):

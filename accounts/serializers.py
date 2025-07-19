@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from accounts.models import User
 from blog.models import Post
-from blog.serializer import PostSerializer
+from blog.serializer import PostSerializer, LikeSerializer, CommentSerializer
 
 class UserPostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,6 +45,8 @@ class PostUserSerializer(serializers.ModelSerializer):
         
 class UserPostListSerializer(serializers.ModelSerializer):
     created_by = PostUserSerializer(read_only=True)
+    likes = LikeSerializer(source='post_likes', many=True, read_only=True)
+    comments = CommentSerializer(source='post_comments', many=True, read_only=True)
     class Meta:
         model = Post
         fields = [
@@ -54,6 +56,8 @@ class UserPostListSerializer(serializers.ModelSerializer):
             'created_at',
             'cover_image',
             'description',
+            'likes',
+            'comments'
         ]
         
 class BasicUserSerializer(serializers.ModelSerializer):

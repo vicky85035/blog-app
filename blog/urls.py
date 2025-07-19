@@ -1,20 +1,22 @@
 from django.urls import path
 from blog.views import (
-    UserPostList,
+    # UserPostList,
     PostList,
     PostCreate,
     PostRetrieveUpdateDestroy,
     LikeList,
     LikeCreate,
-    postLikeRetrieveUpdateDestroy,
+    PostLikeRetrieveUpdateDestroy,
     CommentList,
     CommentCreate,
     CommentRetrieveUpdateDestroy,
+    PostListApiView
 )
 
 urlpatterns = [
-    path("user_post/<int:user_id>/", UserPostList.as_view(), name='user-post-list'),
+    # path("user_post/<int:user_id>/", UserPostList.as_view(), name='user-post-list'),
     path("posts/", PostList.as_view(), name="post-list"),
+    path("posts-test/", PostListApiView.as_view(), name="post-list"),
     path("posts/create/", PostCreate.as_view(), name="post-create"),
     path(
         "posts/<int:pk>/",
@@ -25,7 +27,7 @@ urlpatterns = [
     path("posts/<int:post_id>/like/", LikeCreate.as_view(), name="like-create"),
     path(
         "posts/like/<int:pk>/",
-        postLikeRetrieveUpdateDestroy.as_view(),
+        PostLikeRetrieveUpdateDestroy.as_view(),
         name="like-retrieve-update-destroy",
     ),
     path('posts/comments/', CommentList.as_view(), name='comment-list'),

@@ -2,7 +2,8 @@ from django.urls import path
 from accounts.views import (
     UserListCreate, LoginAPIView,
     SignupAPIView, UserRetrieveUpdateDestroy,
-    TestAPI, UserPostList
+    TestAPI,
+    # UserPostList
 )
 
 urlpatterns = [
@@ -11,6 +12,6 @@ urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api-view'),
     path('signup/', SignupAPIView.as_view(), name='signup-api-view'),
     path('testapi/<str:name>/', TestAPI.as_view(), name='test-api-view'),
-    path('user/posts/', UserPostList.as_view(), name='user-post-list'),
-    
+    # path('user/posts/', UserPostList.as_view(), name='user-post-list'),
+
 ]

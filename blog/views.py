@@ -79,7 +79,7 @@ class LikeCreate(generics.CreateAPIView):
             status=201
         )
 
-class postLikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class LikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticated]
 

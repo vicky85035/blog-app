@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from blog.models import Post
 from django.shortcuts import get_object_or_404
 from blog.serializer import PostSerializer
+from accounts.serializers import UserPostListSerializer
 from accounts.permissions import IsAuthorOrReadOnly
 from rest_framework.request import Request
 # from django.contrib.auth.models import User # Or your custom user model
@@ -170,8 +171,8 @@ class UserListCreate(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["username", "id"]
-    ordering_fields = ["username", "date_joined"]
+    search_fields = ["username", "first_name", "last_name", "id"]
+    ordering_fields = ["username","first_name", "no_of_posts", "date_joined"]
 
 
 class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -200,3 +201,12 @@ class TestAPI(generics.ListCreateAPIView):
         # to fetch API BODY DATA
         # use request.data
         return Response([{"name": "ravi"}, {"name": "vicky"}])
+
+
+class UserPostList(generics.ListAPIView):
+    serializer_class = UserPostListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return Post.objects.filter(created_by = self.request.user)
+    

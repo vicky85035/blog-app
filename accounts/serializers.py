@@ -37,6 +37,25 @@ class UserSerializer(serializers.ModelSerializer):
     #     # data = PostSerializer(result, many=True).data
     #     return data
 
+class PostUserSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    class Meta:
+        model = User
+        fields = ["id", "name", "email", "avatar"]
+        
+class UserPostListSerializer(serializers.ModelSerializer):
+    created_by = PostUserSerializer(read_only=True)
+    class Meta:
+        model = Post
+        fields = [
+            'id',
+            'created_by',
+            'title',
+            'created_at',
+            'cover_image',
+            'description',
+        ]
+        
 class BasicUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

@@ -6,14 +6,14 @@ from blog.views import (
     PostRetrieveUpdateDestroy,
     LikeList,
     LikeCreate,
-    postLikeRetrieveUpdateDestroy,
+    PostLikeRetrieveUpdateDestroy,
     CommentList,
     CommentCreate,
     CommentRetrieveUpdateDestroy,
 )
 
 urlpatterns = [
-    path("user_post/<int:user_id>/", UserPostList.as_view(), name='user-post-list'),
+    path("user_post/<int:user_id>/", UserPostList.as_view(), name="user-post-list"),
     path("posts/", PostList.as_view(), name="post-list"),
     path("posts/create/", PostCreate.as_view(), name="post-create"),
     path(
@@ -21,15 +21,19 @@ urlpatterns = [
         PostRetrieveUpdateDestroy.as_view(),
         name="post-retrieve-update-destroy",
     ),
-    path('posts/like/', LikeList.as_view(), name='like-list'),
+    path("posts/like/", LikeList.as_view(), name="like-list"),
     path("posts/<int:post_id>/like/", LikeCreate.as_view(), name="like-create"),
     path(
         "posts/like/<int:pk>/",
-        postLikeRetrieveUpdateDestroy.as_view(),
+        PostLikeRetrieveUpdateDestroy.as_view(),
         name="like-retrieve-update-destroy",
     ),
-    path('posts/comments/', CommentList.as_view(), name='comment-list'),
-    path("posts/<int:post_id>/comments/add/", CommentCreate.as_view(), name="comment-create"),
+    path("posts/comments/", CommentList.as_view(), name="comment-list"),
+    path(
+        "posts/<int:post_id>/comments/add/",
+        CommentCreate.as_view(),
+        name="comment-create",
+    ),
     path(
         "posts/comment/<int:pk>/",
         CommentRetrieveUpdateDestroy.as_view(),

@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, filters, permissions
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
 from blog.models import Post, Postlike, PostComment
 from accounts.models import User
 from blog.serializer import PostSerializer, LikeSerializer, CommentSerializer,PostLikeSerializer, PostCommentSerializer
@@ -79,7 +78,7 @@ class LikeCreate(generics.CreateAPIView):
             status=201
         )
 
-class LikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class PostLikeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticated]
 

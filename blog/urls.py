@@ -1,6 +1,5 @@
 from django.urls import path
 from blog.views import (
-    # UserPostList,
     PostList,
     PostCreate,
     PostRetrieveUpdateDestroy,
@@ -14,7 +13,6 @@ from blog.views import (
 )
 
 urlpatterns = [
-    path("user_post/<int:user_id>/", UserPostList.as_view(), name="user-post-list"),
     path("posts/", PostList.as_view(), name="post-list"),
     path("posts-test/", PostListApiView.as_view(), name="post-list"),
     path("posts/create/", PostCreate.as_view(), name="post-create"),
